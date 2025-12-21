@@ -5,22 +5,12 @@
 <div th:fragment="content">
     <h2>Product List</h2>
 
-    <a class="btn btn-primary mb-3" href="/products/create">Add New Product</a>
+    <a class="btn btn-success mb-3" href="/products/create">Add Product</a>
 
     <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Quantity</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td colspan="4" class="text-center">No products available</td>
-            </tr>
-        </tbody>
+        <tr>
+            <td class="text-center">No products available</td>
+        </tr>
     </table>
 </div>
 
