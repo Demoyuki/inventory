@@ -5,18 +5,22 @@
 <div th:fragment="content">
     <h2>Login</h2>
 
-    <form th:action="@{/login/doLogin}" th:object="${loginModel}" method="post">
+    <form th:action="@{/doLogin}" th:object="${loginModel}" method="post">
 
         <div class="mb-3">
             <label class="form-label">Username</label>
-            <input type="text" class="form-control" th:field="*{username}">
+            <input th:field="*{username}" class="form-control"/>
             <div class="text-danger" th:errors="*{username}"></div>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Password</label>
-            <input type="password" class="form-control" th:field="*{password}">
+            <input type="password" th:field="*{password}" class="form-control"/>
             <div class="text-danger" th:errors="*{password}"></div>
+        </div>
+
+        <div class="text-danger mb-3" th:if="${loginError}">
+            <p th:text="${loginError}"></p>
         </div>
 
         <button type="submit" class="btn btn-primary">Login</button>

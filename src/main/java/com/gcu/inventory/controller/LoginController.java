@@ -7,13 +7,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/login")
 public class LoginController {
 
-    @GetMapping("")
+    @GetMapping("/login")
     public String display(Model model) {
         model.addAttribute("loginModel", new LoginModel());
         return "login";
@@ -28,6 +26,14 @@ public class LoginController {
             return "login";
         }
 
-        return "redirect:/products";
+        // Simulated authentication (NO BCrypt, NO Spring Security)
+        if ("admin".equals(loginModel.getUsername())
+                && "admin".equals(loginModel.getPassword())) {
+
+            return "redirect:/products";
+        }
+
+        model.addAttribute("loginError", "Invalid username or password");
+        return "login";
     }
 }

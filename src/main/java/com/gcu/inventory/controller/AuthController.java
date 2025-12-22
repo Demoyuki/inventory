@@ -1,29 +1,22 @@
 package com.gcu.inventory.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AuthController {
 
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
+    @PostMapping("/auth/login")
+    public String login(
+            @RequestParam String username,
+            @RequestParam String password
+    ) {
+        // Placeholder authentication logic (no security yet)
+        if (username.equals("admin") && password.equals("password")) {
+            return "redirect:/";
+        }
 
-    @PostMapping("/login")
-    public String processLogin() {
-        return "redirect:/products";
-    }
-
-    @GetMapping("/register")
-    public String register() {
-        return "register";
-    }
-
-    @PostMapping("/register")
-    public String processRegister() {
-        return "redirect:/login";
+        return "redirect:/login?error";
     }
 }

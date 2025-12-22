@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main :: layout}">
+
+<div th:fragment="content">
+    <h2>Register</h2>
+
+    <form th:action="@{/register}" th:object="${user}" method="post">
+
+        <div class="mb-3">
+            <label class="form-label">First Name</label>
+            <input th:field="*{firstName}" class="form-control"/>
+            <div class="text-danger" th:errors="*{firstName}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Last Name</label>
+            <input th:field="*{lastName}" class="form-control"/>
+            <div class="text-danger" th:errors="*{lastName}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email Address</label>
+            <input th:field="*{email}" class="form-control"/>
+            <div class="text-danger" th:errors="*{email}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Phone Number</label>
+            <input th:field="*{phoneNumber}" class="form-control"/>
+            <div class="text-danger" th:errors="*{phoneNumber}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input th:field="*{username}" class="form-control"/>
+            <div class="text-danger" th:errors="*{username}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" th:field="*{password}" class="form-control"/>
+            <div class="text-danger" th:errors="*{password}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" th:field="*{confirmPassword}" class="form-control"/>
+            <div class="text-danger" th:errors="*{confirmPassword}"></div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Register</button>
+        <a href="/login" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+</html>
