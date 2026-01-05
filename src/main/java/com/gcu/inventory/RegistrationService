@@ -1,0 +1,15 @@
+package com.gcu.inventory.service;
+
+import com.gcu.inventory.model.UserRegistrationModel;
+import org.springframework.stereotype.Service;
+
+@Service
+public class RegistrationService {
+    public boolean passwordsMatch(UserRegistrationModel user) {
+        return user.getPassword() != null
+                && user.getConfirmPassword() != null
+                && user.getPassword().equals(user.getConfirmPassword());
+    }
+
+    // public void register(UserRegistrationModel user) { ... } // later
+}
