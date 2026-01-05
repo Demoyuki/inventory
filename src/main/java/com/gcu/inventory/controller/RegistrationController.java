@@ -1,6 +1,7 @@
 package com.gcu.inventory.controller;
 
 import com.gcu.inventory.model.UserRegistrationModel;
+import com.gcu.inventory.service.RegistrationService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class RegistrationController {
+
+    private final RegistrationService registrationService;
+
+    public RegistrationController(RegistrationService registrationService) {
+        this.registrationService = registrationService;
+    }
 
     @GetMapping("/register")
     public String showRegister(Model model) {
@@ -27,7 +34,7 @@ public class RegistrationController {
             return "register/register";
         }
 
-        if (!user.passwordsMatch()) {
+        if (!registrationService.passwordsMatch(user)) {
             bindingResult.rejectValue(
                 "confirmPassword",
                 "password.mismatch",
@@ -39,3 +46,4 @@ public class RegistrationController {
         return "register/success";
     }
 }
+
