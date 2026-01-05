@@ -11,5 +11,5 @@ public class RegistrationService {
                 && user.getPassword().equals(user.getConfirmPassword());
     }
 
-    // public void register(UserRegistrationModel user) { ... } // later
+
 }
