@@ -36,9 +36,9 @@ public class RegistrationController {
 
         if (!registrationService.passwordsMatch(user)) {
             bindingResult.rejectValue(
-                "confirmPassword",
-                "password.mismatch",
-                "Passwords do not match."
+                    "confirmPassword",
+                    "password.mismatch",
+                    "Passwords do not match."
             );
             return "register/register";
         }
@@ -46,4 +46,7 @@ public class RegistrationController {
         return "register/success";
     }
 }
+
+
+   
 
