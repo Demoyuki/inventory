@@ -3,6 +3,7 @@ package com.gcu.inventory.controller;
 import com.gcu.inventory.model.LoginModel;
 import com.gcu.inventory.service.AuthService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +36,8 @@ public class LoginController {
     @PostMapping("/doLogin")
     public String doLogin(@Valid LoginModel loginModel,
                           BindingResult bindingResult,
-                          Model model) {
+                          Model model,
+                          HttpSession session) {
 
         if (bindingResult.hasErrors()) {
             return "login";
@@ -44,7 +46,7 @@ public class LoginController {
         // Added for milestone 3
 		// Calls the authservice to validate credentials
 		// The controller does not perform authentication logic itself
-		boolean success = authService.login(loginModel.getUsername(), loginModel.getPassword());
+		boolean success = authService.authenticate(loginModel.getUsername(), loginModel.getPassword());
 		
 		// Added for milestone 3
 		// Added for milestone 3
@@ -59,10 +61,14 @@ public class LoginController {
 		
 		System.out.println(String.format("Form with Username of %s and Passowrd of %s", 
 				loginModel.getUsername(), loginModel.getPassword()));
+		
 
+		// Stores username in session to display
+		session.setAttribute("loggedInUser", loginModel.getUsername());
+		
         //model.addAttribute("loginError", "Invalid username or password");
         //return "login";
-		return "home";
+		return "redirect:/products";
     }
     
     // Added for milestone 3
