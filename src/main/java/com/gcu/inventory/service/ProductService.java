@@ -26,4 +26,18 @@ public class ProductService {
 		return productDAO.findAll();
 	}
 	
+	
+	// Added for activity 5:
+	public Product getById(int id) {
+		return productDAO.findById(id);
+		
+	}
+	
+	public boolean update(Product product) {
+		return productDAO.updateProduct(product);
+	}
+	
+	public boolean delete(int id) {
+		return productDAO.deleteById(id);
+	}
 }

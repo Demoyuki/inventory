@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+/**
+ * Milestone 4 updates
+ * Updated to call RegistrationService.register
+ * Added handling for duplicate username via Boolean return
+ */
 @Controller
 public class RegistrationController {
 
@@ -39,6 +44,20 @@ public class RegistrationController {
                     "confirmPassword",
                     "password.mismatch",
                     "Passwords do not match."
+            );
+            return "register/register";
+        }
+        
+        // Milestone 4 addition
+        // Delegates registration logic to the registration service layer for database persistence
+        boolean success = registrationService.register(user);
+
+        // Handles duplicate username scenarios returned from the database
+        if (!success) {
+            bindingResult.rejectValue(
+                    "username",
+                    "username.exists",
+                    "Username already exists."
             );
             return "register/register";
         }

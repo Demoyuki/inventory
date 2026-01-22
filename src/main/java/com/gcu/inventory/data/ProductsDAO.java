@@ -39,7 +39,7 @@ public class ProductsDAO {
 		// Retrieves all products from the database for the list page
 		public List<Product> findAll() {
 			String sql = """
-					SELECT products_Name, products_Description, products_Price, products_Quantity
+					SELECT idProducts, products_Name, products_Description, products_Price, products_Quantity
 					FROM products
 					""";
 			
@@ -51,11 +51,51 @@ public class ProductsDAO {
 			@Override
 			public Product mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Product p = new Product();
+				p.setId(rs.getInt("idProducts"));
 				p.setName(rs.getString("products_Name"));
 				p.setDescription(rs.getString("products_Description"));
 				p.setPrice(rs.getDouble("products_Price"));
 				p.setQuantity(rs.getInt("products_Quantity"));
 				return p;
 			}
+		}
+		
+		// Added for  Activity 5 Section
+		public Product findById(int id) {
+			String sql = "SELECT idProducts, products_Name, products_Description, products_Price, products_Quantity " +
+					"FROM products WHERE idProducts = ?";
+			return jdbcTemplate.queryForObject(sql,  (rs, rowNum) -> {
+				Product p = new Product();
+				p.setId(rs.getInt("idProducts"));
+				p.setName(rs.getString("products_Name"));
+				p.setDescription(rs.getString("products_Description"));
+				p.setPrice(rs.getDouble("products_Price"));
+				p.setQuantity(rs.getInt("products_Quantity"));
+				return p;
+			}, id);
+			
+		}
+		
+		public boolean updateProduct(Product product) {
+			String sql = """
+					UPDATE products SET products_Name = ?, products_Description = ?, products_Price =?, Products_Quantity = ?
+					WHERE idProducts = ?
+					""";
+			
+			int rows = jdbcTemplate.update(sql,
+		            product.getName(),
+		            product.getDescription(),
+		            product.getPrice(),
+		            product.getQuantity(),
+		            product.getId());
+
+		    return rows > 0;
+		}
+		
+		public boolean deleteById(int id) {
+			String sql = "DELETE FROM products WHERE idProducts = ?";
+			int rows = jdbcTemplate.update(sql, id);
+			return rows > 0;
+			
 		}
 }
