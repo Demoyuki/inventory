@@ -1,50 +1,54 @@
 package com.gcu.inventory.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.gcu.inventory.data.UserDAO;
 import com.gcu.inventory.model.UserRegistrationModel;
 
 /**
- * Updates For Milestone 4
- * Removed in memory storage
- * Logic moved into DAO.java
- * Accepts UserRegistrationModel and extracts required fields
+ * Milestone 4: Moved logic into DAO, removed in-memory storage
+ * Spring Security upgrade: Encodes password with BCrypt before saving
+ *                          so Spring Security can validate it on login.
  */
 @Service
 public class RegistrationService {
 
-	// Used to inejct UserDAO for database backed user operations
-	private final UserDAO userDAO;
-	
-	// Constructor based dependency injection for the UserDAO
-    public RegistrationService(UserDAO userDAO) {
+    private final UserDAO userDAO;
+    private final PasswordEncoder passwordEncoder;
+
+    public RegistrationService(UserDAO userDAO, PasswordEncoder passwordEncoder) {
         this.userDAO = userDAO;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    // Registers a new user by validating uniqueness and persisting data to the database
+    /**
+     * Registers a new user.
+     * Checks for duplicate username, encodes the password with BCrypt,
+     * then persists to the database.
+     * @return false if username already exists, true on success
+     */
     public boolean register(UserRegistrationModel model) {
-
-    	// Prevents duplicate usernames from being added
         if (userDAO.userExists(model.getUsername())) return false;
-        // Validation registration data to the database
+
+        // Encode the plain-text password before saving
+        String encodedPassword = passwordEncoder.encode(model.getPassword());
+
         userDAO.createUser(
             model.getFirstName(),
             model.getLastName(),
             model.getEmail(),
             model.getPhoneNumber(),
             model.getUsername(),
-            model.getPassword()
+            encodedPassword
         );
         return true;
     }
-	
+
     /**
-     * Verifies the the password and confirmation password match
-     * @param user
-     * @return
+     * Verifies that password and confirmPassword fields match.
      */
-	public boolean passwordsMatch(UserRegistrationModel user) {
+    public boolean passwordsMatch(UserRegistrationModel user) {
         return user.getPassword() != null
                 && user.getConfirmPassword() != null
                 && user.getPassword().equals(user.getConfirmPassword());

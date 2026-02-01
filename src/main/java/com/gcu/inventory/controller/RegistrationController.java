@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 /**
- * Milestone 4 updates
- * Updated to call RegistrationService.register
- * Added handling for duplicate username via Boolean return
+ * Milestone 4: Added database persistence via RegistrationService
+ * Spring Security upgrade: Password is now BCrypt-encoded by RegistrationService
+ *                          before being saved to the database.
+ *                          Added model attributes for the success page.
  */
 @Controller
 public class RegistrationController {
@@ -33,7 +34,8 @@ public class RegistrationController {
     @PostMapping("/register")
     public String processRegister(
             @Valid @ModelAttribute("user") UserRegistrationModel user,
-            BindingResult bindingResult
+            BindingResult bindingResult,
+            Model model
     ) {
         if (bindingResult.hasErrors()) {
             return "register/register";
@@ -47,12 +49,9 @@ public class RegistrationController {
             );
             return "register/register";
         }
-        
-        // Milestone 4 addition
-        // Delegates registration logic to the registration service layer for database persistence
+
         boolean success = registrationService.register(user);
 
-        // Handles duplicate username scenarios returned from the database
         if (!success) {
             bindingResult.rejectValue(
                     "username",
@@ -62,10 +61,10 @@ public class RegistrationController {
             return "register/register";
         }
 
+        // Pass attributes so success.html can display them
+        model.addAttribute("firstName", user.getFirstName());
+        model.addAttribute("username", user.getUsername());
+
         return "register/success";
     }
 }
-
-
-   
-

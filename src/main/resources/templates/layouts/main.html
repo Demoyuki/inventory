@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:fragment="layout">
 <head>
     <title>Inventory App</title>
@@ -11,8 +12,21 @@
 <nav class="navbar navbar-dark bg-dark">
     <a class="navbar-brand ms-3" href="/">Inventory</a>
     <div class="ms-auto me-3">
-        <a class="btn btn-outline-light btn-sm me-2" href="/login">Login</a>
-        <a class="btn btn-outline-light btn-sm" href="/register">Register</a>
+
+        <!-- Shown only when NOT logged in -->
+        <div sec:authorize="isAnonymous()" class="d-inline">
+            <a class="btn btn-outline-light btn-sm me-2" href="/login">Login</a>
+            <a class="btn btn-outline-light btn-sm" href="/register">Register</a>
+        </div>
+
+        <!-- Shown only when logged in -->
+        <div sec:authorize="isAuthenticated()" class="d-inline">
+            <span class="text-light me-3">Logged in as <strong sec:authentication-name=""></strong></span>
+            <form th:action="@{/logout}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+            </form>
+        </div>
+
     </div>
 </nav>
 

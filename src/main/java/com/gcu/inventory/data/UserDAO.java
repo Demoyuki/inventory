@@ -4,29 +4,24 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 /**
- * Updates For Milestone 4
- * Handles database access related to users
- * Uses Spring JDBC via JdbcTemplate
- * Implements SQL operations for:
- * 	 Creating User
- * 	 Checking if username exist
- * 	 Validating Login Credentials
+ * Handles database access related to users.
+ * Uses Spring JDBC via JdbcTemplate.
+ * 
+ * Milestone 4: Added createUser, userExists, validateLogin
+ * Spring Security upgrade: Added findPasswordByUsername for UserDetailsService
  */
 @Repository
 public class UserDAO {
 
-	// Provides access to the database using Spring JDBC
-	private final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-	// Constructor based injection of JdbcTemplate
     public UserDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     /**
-     * Checks if username already exist
-     * @param username
-     * @return
+     * Checks if a username already exists in the database.
+     * Used by RegistrationService to prevent duplicate usernames.
      */
     public boolean userExists(String username) {
         String sql = "SELECT COUNT(*) FROM userinfo WHERE username = ?";
@@ -35,35 +30,26 @@ public class UserDAO {
     }
 
     /**
-     * To create new user and add information to database
-     * @param firstName
-     * @param lastName
-     * @param email
-     * @param phoneNumber
-     * @param username
-     * @param password
-     * @return
+     * Creates a new user record in the database.
+     * Password should already be BCrypt-encoded before calling this method.
      */
     public int createUser(String firstName, String lastName, String email, String phoneNumber,
             String username, String password) {
-
-	String sql = """
-	INSERT INTO userinfo (first_name, last_name, email, phone_number, username, password)
-	VALUES (?, ?, ?, ?, ?, ?)
-	""";
-	
-	return jdbcTemplate.update(sql, firstName, lastName, email, phoneNumber, username, password);
-	}
+        String sql = """
+                INSERT INTO userinfo (first_name, last_name, email, phone_number, username, password)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """;
+        return jdbcTemplate.update(sql, firstName, lastName, email, phoneNumber, username, password);
+    }
 
     /**
-     * Checks login credentials
-     * @param username
-     * @param password
-     * @return
+     * Loads the BCrypt-hashed password for a given username.
+     * Returns null if the username does not exist.
+     * Used by UserDetailsServiceImpl for Spring Security authentication.
      */
-    public boolean validateLogin(String username, String password) {
-        String sql = "SELECT COUNT(*) FROM userinfo WHERE username = ? AND password = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, username, password);
-        return count != null && count > 0;
+    public String findPasswordByUsername(String username) {
+        String sql = "SELECT password FROM userinfo WHERE username = ?";
+        var results = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("password"), username);
+        return results.isEmpty() ? null : results.get(0);
     }
 }
