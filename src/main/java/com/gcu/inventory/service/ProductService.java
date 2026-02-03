@@ -1,6 +1,7 @@
 package com.gcu.inventory.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -39,5 +40,10 @@ public class ProductService {
 	
 	public boolean delete(int id) {
 		return productDAO.deleteById(id);
+	}
+	
+	// Service layer method
+	public Optional<Product> getByIdOptional(int id) {
+		return productDAO.findByIdOptional(id);
 	}
 }
