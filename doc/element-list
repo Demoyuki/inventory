@@ -1,0 +1,5 @@
+com.gcu.inventory
+com.gcu.inventory.controller
+com.gcu.inventory.data
+com.gcu.inventory.model
+com.gcu.inventory.service
